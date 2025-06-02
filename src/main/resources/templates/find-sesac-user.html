@@ -1,0 +1,218 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title>SeSAC 회원 정보 가져오기</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="mt-7 flex justify-center min-h-screen text-sm">
+        <div class="bg-white p-6 w-full max-w-md">
+            <h1 class="text-2xl font-bold text-center mb-8">SeSAC 회원 정보 가져오기</h1>
+            <form id="findSesacUserForm" action="/find-sesac-user" method="post">
+
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">이메일</label>
+                    <div class="flex gap-2">
+                        <input type="email" id="email" name="email"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div id="emailInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일을 입력해주세요.</div>
+                    <div id="emailCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 주소 형식이 올바르지 않습니다. 예시: example@domain.com</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="email-code" class="block text-sm font-medium text-gray-700 mb-2">이메일 인증 코드</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="email-code"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500" disabled>
+                        <button id="emailCodeSendBtn" class="h-full bg-gray-400 text-white px-4 py-2 rounded-lg whitespace-nowrap" disabled>
+                            이메일 인증 코드 발송
+                        </button>
+                    </div>
+                    <div id="emailCodeCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 인증 코드가 올바르지 않습니다.</div>
+                    <div id="emailCodeTimer" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden"></div>
+                </div>
+
+                <div class="flex space-x-2">
+                    <div class="bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        <a href="/signup">
+                            새로 회원가입 하기
+                        </a>
+                    </div>
+                    <button type="submit" id="findSesacUserFormSubmitBtn"
+                            class="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        SeSAC 회원 정보 가져오기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sesac 회원 정보 없음 모달 -->
+    <div th:if="${notExist != null && notExist == true}" id="sesacUserNotExistModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center">
+            <!-- Modal container -->
+            <div class="overflow-y-auto max-h-[100vh] bg-white rounded-lg w-full max-w-md mx-4 relative ">
+                <!-- Close button -->
+                <div class="absolute top-4 right-4">
+                    <button id="sesacUserNotExistModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div>
+                    <h1 class="text-xl font-bold text-center mb-8 mt-8">SeSAC 회원 정보 확인</h1>
+                </div>
+
+                <!-- 안내 문구 -->
+                <div class="mt-4 mb-2 text-sm text-center">
+                    <div>해당 이메일의 SeSAC 회원 정보가 <b class="text-red-500">존재하지 않습니다.</b></div>
+                </div>
+
+                <div class="mt-3 flex justify-center text-center space-x-2 m-1 text-sm">
+                    <div class="w-full bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                        <a href="/signup">
+                            새로 회원가입
+                        </a>
+                    </div>
+                    <div class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        <a href="/find-sesac-user">
+                            다시 확인하기
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- Sesac 회원 정보 모달 -->
+    <div th:if="${sesacUserMemberDTO != null}" id="sesacUserConfirmModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center">
+        <th:block th:with="member=${sesacUserMemberDTO}">
+        <!-- Modal container -->
+        <div class="overflow-y-auto max-h-[100vh] bg-white rounded-lg w-full max-w-md mx-4 relative ">
+            <!-- Close button -->
+            <div class="absolute top-4 right-4">
+                <button id="sesacUserConfirmModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div>
+                <h1 class="text-xl font-bold text-center mb-8 mt-8">Sesac 회원 정보 확인</h1>
+            </div>
+
+            <!-- sesac User Confirm form -->
+            <div class="px-2 pb-2 text-[12px]">
+                <form id="sesacUserConfirmForm" action="/pre-signup" method="post">
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmFormId" class="block font-bold text-gray-700 mb-2">아이디</label>
+                        <input type="text" id="sesacUserConfirmFormId" name="id"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.id}" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmEmail" class="block font-bold text-gray-700 mb-2">이메일</label>
+                        <input type="email" id="sesacUserConfirmEmail" name="email"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.email}" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmName" class="block font-bold text-gray-700 mb-2">이름</label>
+                        <input type="text" id="sesacUserConfirmName" name="name"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.name}" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmPhone" class="block font-bold text-gray-700 mb-2">핸드폰 번호</label>
+                        <input type="text" id="sesacUserConfirmPhone" name="phone"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.phone}" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmFormAddress" class="block font-bold text-gray-700 mb-2">주소</label>
+                        <input type="text" id="sesacUserConfirmFormAddress" name="address"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.address}" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmFormDetailAddress" class="block font-bold text-gray-700 mb-2">상세 주소</label>
+                        <input type="text" id="sesacUserConfirmFormDetailAddress" name="detailAddress"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.detailAddress}" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sesacUserConfirmFormCampusName" class="block font-bold text-gray-700 mb-2">소속 캠퍼스</label>
+                        <input type="text" id="sesacUserConfirmFormCampusName" name="campusName"
+                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:value="${member.campusName}" disabled>
+                    </div>
+
+                    <input type="hidden" name="campusNo" th:value="${member.campusNo}">
+
+                    <div class="mb-4">
+                        <label class="block font-bold text-gray-700 mb-2">SeSAC에 등록된 강좌</label>
+
+                        <!-- SeSAC에 등록된 강좌 목록 테이블 -->
+                        <div class="w-full overflow-x-auto">
+                            <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                                <thead>
+                                <tr class="border bg-gray-100">
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">강사</th>
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 300px;">강좌명</th>
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 120px;">시작날짜</th>
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 120px;">종료날짜</th>
+                                </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    <tr th:if="${member.courseList == null}" class="border bg-gray-100">
+                                        <td colSpan="4" class="py-4 px-4 text-center text-gray-500">강좌 정보가 없습니다.</td>
+                                    </tr>
+                                    <tr th:if="${member.courseList != null}" class="border border-b">
+                                        <th:block th:each="course : ${member.courseList}">
+                                            <td class="py-1 px-1 text-center border border-gray-300" th:text="${course.teacher}"></td>
+                                            <td class="py-1 px-1 text-center border border-gray-300" th:text="${course.courseName}"></td>
+                                            <td class="py-1 px-1 text-center border border-gray-300" th:text="${course.startDate}"></td>
+                                            <td class="py-1 px-1 text-center border border-gray-300" th:text="${course.endDate}"></td>
+
+                                            <input type="hidden" name="courseNo" th:value="${course.courseNo}"/>
+                                        </th:block>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex justify-center text-center space-x-2">
+                        <div class="w-full bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                            <a href="/signup">
+                                새로 회원가입
+                            </a>
+                        </div>
+                        <button type="submit" id="sesacUserConfirmFormSubmitBtn"
+                                class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                            이 정보로 회원가입
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        </th:block>
+    </div>
+    <script type="module" src="/js/domain/member/find-sesac-user.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+</script>
+</html>

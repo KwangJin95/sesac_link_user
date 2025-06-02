@@ -1,0 +1,43 @@
+<div th:fragment="bannerFragment">
+    <div class="w-full max-w-4xl mx-auto mt-6 rounded-xl">
+        <!-- 화살표 + 배너 -->
+        <div class="flex items-center">
+            <!-- 이전 버튼 -->
+            <button id="prevBtn" class="p-2 bg-white text-gray-700 hover:bg-gray-100 rounded-l-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <!-- 배너 이미지 -->
+            <div class="overflow-hidden flex-1">
+                <div id="banner" class="flex transition-transform duration-500 ease-in-out">
+                    <a href="https://sesac.seoul.kr/" target="_blank" class="w-full flex-shrink-0">
+                        <img src="/images/banner/banner1.jpg" class="w-full h-full object-cover" alt="배너1" />
+                    </a>
+                    <a href="/reservation/space" class="w-full flex-shrink-0">
+                        <img src="/images/banner/banner2.jpg" class="w-full h-full object-cover" alt="배너2" />
+                    </a>
+                    <a href="/reservation/advice" class="w-full flex-shrink-0">
+                        <img src="/images/banner/banner3.jpg" class="w-full h-full object-cover" alt="배너3" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- 다음 버튼 -->
+            <button id="nextBtn" class="p-2 bg-white text-gray-700 hover:bg-gray-100 rounded-r-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- 정지/재생 버튼 -->
+        <div class="flex justify-center mt-2">
+            <button id="pauseBtn" class="bg-white text-sm px-3 py-1 rounded-md shadow hover:bg-gray-100">
+                ⏸️ 정지
+            </button>
+        </div>
+    </div>
+    <script type="module" src="/js/global/banner.js"></script>
+</div>

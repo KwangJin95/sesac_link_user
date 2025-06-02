@@ -1,0 +1,255 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>마이페이지 > 예약 > 잡코디</title>
+</head>
+
+<div layout:fragment="side">
+    <div id="sideBar" class="p-4 border">
+        <!-- 사이드바 메뉴 항목 -->
+        <div class="text-xs">
+            <div class="mb-4">
+                <h3 class="text-gray-600 mb-2">계정 관리</h3>
+                <ul class="pl-2 space-y-1 text-sm font-bold">
+                    <li><a href="/my/member" class="block px-2 py-1 text-gray-700 hover:bg-gray-200 rounded">계정 정보</a></li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="font-medium text-gray-600 mb-2">예약 관리</h3>
+                <ul class="pl-2 space-y-1 text-sm font-bold">
+                    <li><a href="/my/reservation/space" class="block px-2 py-1 text-gray-700 hover:bg-gray-200 rounded">회의실</a></li>
+                    <li><a class="block px-2 py-1 text-green-500 rounded">잡코디</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="me=${#authentication.principal}">
+            <div class="w-full max-w-3xl mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-sm border-b-2 mb-6">
+                    <div class="px-3 py-2 font-bold hover:text-green-500 text-gray-400">
+                        <a href="/my/reservation/space">
+                            회의실
+                        </a>
+                    </div>
+                    <div class="px-3 py-2 font-bold border-b-2 border-black">
+                        <a href="/my/reservation/advice">
+                            잡코디
+                        </a>
+                    </div>
+                </div>
+
+                <div class="w-full mb-4 text-xs">
+                    <!-- 검색 옵션 -->
+                    <form id="searchAdviceReservationForm" method="GET" class="w-full mt-1 mb-2">
+                        <div class="border-b-2 flex items-center w-full">
+                            <div class="flex items-center mb-2">
+
+                                <input type="hidden" name="userNo" th:value="${me.userNo}">
+                                <input type="hidden" name="jobAdminNo" th:value="${me.adminNo}">
+
+                                <input type="date" id="adviceReservationDate" name="adviceReservationDate"
+                                       class="mr-3 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"/>
+
+                                <select id="selectReservationStatus" name="selectReservationStatus"
+                                        class="px-3 py-2 border border-gray-300 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    <option value="%%">상태 전체</option>
+                                    <option th:each="reservationStatus : ${reservationStatusList}"
+                                            th:value="${'%'+reservationStatus.statusName+'%'}"
+                                            th:text="${reservationStatus.statusName == 'APPLYING' ?
+                                                '요청' : reservationStatus.statusName == 'REJECTED' ?
+                                                '거절' : reservationStatus.statusName == 'APPROVED' ?
+                                                '승인' : '취소'}"
+                                    ></option>
+                                </select>
+
+                                <button id="searchAdviceReservationFormResetBtn" type="button"
+                                        class="flex justify-end px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    초기화
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 잡코디 정보 -->
+                    <th:block th:if="${jobCoordinator != null}">
+                        <div class="flex items-start gap-6 mb-6">
+                            <!-- 공간 정보 영역 -->
+                            <div class="flex flex-col gap-2 text-gray-700">
+                                <div class="flex items-center gap-1 font-bold">
+                                    <span>잡코디 -</span>
+                                    <span>[[${jobCoordinator.name}]]</span>
+                                </div>
+                                <div class="flex items-center gap-1 font-bold">
+                                    <span>핸드폰 -</span>
+                                    <span>[[${jobCoordinator.phone}]]</span>
+                                </div>
+                                <div class="flex items-center gap-1 font-bold mr-3">
+                                    <span>이메일 -</span>
+                                    <span>[[${jobCoordinator.email}]]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+
+                    <!-- 예약 목록 테이블 -->
+                    <div class="w-full overflow-x-auto">
+                        <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                            <thead>
+                            <tr class="border bg-gray-100">
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">날짜</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">시간</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 70px;">예약 상태</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 70px;">첨부파일</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 200px;">관리</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="adviceReservationTbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 첨부파일 수정 모달 -->
+            <div id="adviceReservationModifyModal" class="text-sm overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="adviceReservationModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">첨부파일 수정하기</h1>
+                    </div>
+
+                    <!-- adviceReservation modify form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="adviceReservationModifyForm">
+                            <div class="mb-4">
+                                <label for="adviceFile" class="block text-gray-700 mb-2 font-bold">첨부파일</label>
+                                <div class="flex gap-2">
+                                    <input type="file" id="adviceFile" name="adviceFile" accept=".zip, .rar, .7z, .tar, .gz"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                    <button id="adviceFileCancelBtn" class="text-sm h-full font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        취소
+                                    </button>
+                                </div>
+                                <div id="adviceFileInputMsg" class="text-red-500 font-bold ml-3 mt-2 hidden">zip, rar, 7z, tar, gz 파일만 가능합니다.</div>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <input type="hidden" id="adviceReservationModifyFormAdviceReservationNo" name="adviceReservationNo">
+
+                            <button type="submit" id="adviceReservationModifyFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                수정하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 예약 취소 모달 -->
+            <div id="adviceReservationCancelModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="adviceReservationModifyCancelCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">예약 취소하기</h1>
+                    </div>
+
+                    <!-- adviceReservation cancel form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="adviceReservationCancelForm">
+
+                            <div class="mb-4">
+                                <label for="adviceReservationCancelFormUserName" class="block font-bold text-gray-700 mb-2">예약자</label>
+                                <input type="text" id="adviceReservationCancelFormUserName" name="userName"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       disabled>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex gap-2">
+                                    <div class="flex flex-col flex-1">
+                                        <label for="adviceReservationCancelFormResDate" class="block font-bold text-gray-700 mb-2">날짜</label>
+                                        <input type="text" id="adviceReservationCancelFormResDate" name="resDate"
+                                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                               readonly>
+                                    </div>
+
+                                    <div class="flex flex-col flex-1">
+                                        <label for="adviceReservationCancelFormTime" class="block font-bold text-gray-700 mb-2">시간</label>
+                                        <input type="text" id="adviceReservationCancelFormTime" name="time"
+                                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                               disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adviceReservationCancelFormReservationStatus" class="block font-bold text-gray-700 mb-2">예약 상태</label>
+                                <input type="text" id="adviceReservationCancelFormReservationStatus" name="reservationStatus"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       disabled>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <!-- 안내 문구 -->
+                            <div class="mt-4 mb-4 text-sm text-center">
+                                <div>
+                                    <span class="font-bold text-red-500">취소하기</span> 선택 시
+                                </div>
+                                <div class="mt-2 mb-2">
+                                    기존 <b>예약</b>은 <span class="font-bold text-red-500">완전히 취소</span> 처리 됩니다.
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="adviceReservationCancelFormAdviceReservationNo" name="adviceReservationNo">
+                            <input type="hidden" id="adviceReservationCancelFormJobAdminNo" name="jobAdminNo" th:value="${me.adminNo}" >
+                            <input type="hidden" id="adviceReservationCancelFormStartTime" name="startTime" >
+                            <input type="hidden" id="adviceReservationCancelFormEndTime"   name="endTime" >
+
+                            <button type="submit" id="adviceReservationCancelFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                취소하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <script type="module" src="/js/domain/reservation/myAdviceReservation.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+</script>
+</html>

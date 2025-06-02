@@ -1,0 +1,149 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>예약 > 잡코디</title>
+</head>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="me=${#authentication.principal}">
+            <div class="w-full justify-center mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-xs border-b-2 mb-6">
+                    <div class="px-3 py-2 font-bold hover:text-green-500 text-gray-400">
+                        <a href="/reservation/space">
+                            회의실
+                        </a>
+                    </div>
+                    <div class="px-3 py-2 font-bold border-b-2 border-black">
+                        <a href="/reservation/advice">
+                            잡코디
+                        </a>
+                    </div>
+                </div>
+
+                <div class="w-full mb-6 text-xs">
+                    <!-- 검색 옵션 -->
+                    <form id="searchAdviceReservationForm" method="GET" class="w-full mt-1 mb-2">
+                        <div class="border-b-2 flex items-center w-full mb-2">
+                            <div class="flex items-center mb-2">
+                                <input type="month" id="adviceReservationMonth" name="adviceReservationMonth"
+                                       class="mr-3 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"/>
+
+                                <button id="searchAdviceReservationFormResetBtn" type="button"
+                                        class="flex justify-end px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    초기화
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 잡코디 정보 -->
+                    <th:block th:if="${jobCoordinator != null}">
+                        <div class="flex items-start gap-6 mb-6">
+                            <!-- 공간 정보 영역 -->
+                            <div class="flex flex-col gap-2 text-gray-700">
+                                <div class="flex items-center gap-1 font-bold">
+                                    <span>잡코디 -</span>
+                                    <span>[[${jobCoordinator.name}]]</span>
+                                </div>
+                                <div class="flex items-center gap-1 font-bold">
+                                    <span>핸드폰 -</span>
+                                    <span>[[${jobCoordinator.phone}]]</span>
+                                </div>
+                                <div class="flex items-center gap-1 font-bold mr-3">
+                                    <span>이메일 -</span>
+                                    <span>[[${jobCoordinator.email}]]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+
+                    <!-- 달력 -->
+                    <div class="w-full overflow-x-auto mt-3" id="calendarContainer">
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 예약 등록 모달 -->
+            <div id="adviceReservationRegisterModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="adviceReservationRegisterModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">상담 예약 등록하기</h1>
+                    </div>
+
+                    <!-- adviceReservation register form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="adviceReservationRegisterForm">
+
+                            <div class="mb-4">
+                                <label for="adviceReservationRegisterFormResDate" class="block font-bold text-gray-700 mb-2">날짜</label>
+                                <input type="text" id="adviceReservationRegisterFormResDate" name="resDate"
+                                       class="w-full mr-3 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       readonly
+                                />
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <div id="timeSlotContainer" class="grid grid-cols-3 gap-2">
+
+                                </div>
+                                <div id="adviceReservationRegisterFormTimeInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">시간을 선택해주세요.</div>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label for="adviceReservationRegisterFormAdviceFile" class="block text-gray-700 mb-2 font-bold">첨부파일</label>
+                                <div class="flex gap-2">
+                                    <input type="file" id="adviceReservationRegisterFormAdviceFile" name="adviceFile" accept=".zip, .rar, .7z, .tar, .gz"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                    <button id="adviceReservationRegisterFormAdviceFileCancelBtn" class="text-sm h-full font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        취소
+                                    </button>
+                                </div>
+                                <div id="adviceReservationRegisterFormAdviceFileInputMsg" class="text-red-500 font-bold ml-3 mt-2 hidden">zip, rar, 7z, tar, gz 파일만 가능합니다.</div>
+                            </div>
+
+                            <input type="hidden" name="userNo" th:value="${me.userNo}">
+                            <input type="hidden" name="jobAdminNo" th:value="${me.adminNo}">
+                            <input type="hidden" name="startTime">
+                            <input type="hidden" name="endTime">
+
+                            <button type="button" id="adviceReservationRegisterFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                등록하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </th:block>
+    </th:block>
+
+    <script type="module" src="/js/domain/reservation/adviceReservation.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+</html>

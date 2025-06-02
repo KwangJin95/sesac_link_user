@@ -1,0 +1,146 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>회원가입</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="mt-7 flex justify-center min-h-screen text-sm">
+        <div class="bg-white p-6 w-full max-w-md">
+            <h1 class="text-2xl font-bold text-center mb-8">회원가입</h1>
+            <form id="signupForm" action="/signup" method="post" th:object="${memberSignupDTO}">
+                <div class="mb-4">
+                    <label for="signupId" class="block text-sm font-medium text-gray-700 mb-2">아이디</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="signupId" name="id"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:field="*{id}" />
+                        <button id="signupIdDuplicatedCheckBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                            중복 확인
+                        </button>
+                    </div>
+                    <div id="signupIdInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">아이디를 입력해주세요.</div>
+                    <div id="signupIdCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">중복된 아이디거나 중복 확인이 완료되지 않았습니다.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupPw" class="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+                    <input type="password" id="signupPw" name="pw" placeholder="******"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                           >
+                    <div id="signupPwInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호를 입력해주세요.</div>
+                    <div id="signupPwCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">영문 / 숫자 / 특수문자 조합 6글자 이상이어야 합니다.</div>
+                </div>
+
+                <div class="mt-4 mb-4">
+                    <label for="signupConfirmPw" class="block text-sm font-medium text-gray-700 mb-2">비밀번호 확인</label>
+                    <input type="password" id="signupConfirmPw" placeholder="******"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                           >
+                    <div id="signupConfirmPwInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호 확인을 입력해주세요.</div>
+                    <div id="signupConfirmPwCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호와 일치하지 않습니다.</div>
+
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupName" class="block text-sm font-medium text-gray-700 mb-2">이름</label>
+                    <input type="text" id="signupName" name="name"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                           th:field="*{name}">
+                    <div id="signupNameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이름을 입력해주세요.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupPhone" class="block text-sm font-medium text-gray-700 mb-2">핸드폰 번호</label>
+                    <input type="text" id="signupPhone" name="phone" placeholder="010-1234-5678"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                           th:field="*{phone}">
+                    <div id="signupPhoneInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">핸드폰 번호를 입력해주세요.</div>
+                    <div id="signupPhoneCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">010-1234-5678 형식으로 입력해주세요.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupAddress" class="block text-sm font-medium text-gray-700 mb-2">주소</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="signupAddress" name="address"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                           th:field="*{address}">
+                        <button id="signupFindAddressBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                            주소 찾기
+                        </button>
+                    </div>
+                    <div id="signupAddressInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">주소를 입력해주세요.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupDetailAddress" class="block text-sm font-medium text-gray-700 mb-2">상세 주소</label>
+                    <input type="text" id="signupDetailAddress" name="detailAddress"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                           th:field="*{detailAddress}">
+                    <div id="signupDetailAddressInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">상세 주소를 입력해주세요.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupEmail" class="block text-sm font-medium text-gray-700 mb-2">이메일</label>
+                    <div class="flex gap-2">
+                        <input type="email" id="signupEmail" name="email"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                               th:field="*{email}">
+                        <button id="signupEmailDuplicatedCheckBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                            중복 확인
+                        </button>
+                    </div>
+                    <div id="signupEmailInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일을 입력해주세요.</div>
+                    <div id="signupEmailCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 주소 형식이 올바르지 않습니다. 예시: example@domain.com</div>
+                    <div id="signupEmailDuplicatedCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">중복된 이메일이거나 중복 확인이 완료되지 않았습니다.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signupEmailCode" class="block text-sm font-medium text-gray-700 mb-2">이메일 인증 코드</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="signupEmailCode"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500" disabled>
+                        <button id="signupEmailCodeSendBtn" class="h-full bg-gray-400 text-white px-4 py-2 rounded-lg whitespace-nowrap" disabled>
+                            이메일 인증 코드 발송
+                        </button>
+                    </div>
+                    <div id="signupEmailCodeCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 인증 코드가 올바르지 않습니다.</div>
+                    <div id="signupEmailCodeTimer" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden"></div>
+                </div>
+
+                <th:block th:if="${memberSignupDTO != null && memberSignupDTO.getCampusNo() != null}">
+                    <input type="hidden" name="campusNo" th:field="*{campusNo}">
+                </th:block>
+
+                <th:block th:if="${memberSignupDTO != null && memberSignupDTO.getCourseNo() != null}">
+                    <th:block th:each="courseNo : ${memberSignupDTO.getCourseNo}">
+                        <input type="hidden" name="courseNo" th:value="${courseNo}">
+                    </th:block>
+                </th:block>
+
+                <button type="submit" id="signupSubmitBtn"
+                        class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    가입하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/js/domain/member/signup.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const exist = [[${memberSignupDTO}]];
+
+    // 회원가입 실패 후 다시 돌아왔을 경우
+    const signupAgain = [[${signupAgain}]];
+
+    if (signupAgain === true) {
+        setSignup();
+    }
+</script>
+</html>
