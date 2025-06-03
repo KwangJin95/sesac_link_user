@@ -107,7 +107,10 @@ public class MemberServiceImpl implements MemberService {
                 .address(userMemberSignupDTO.getAddress())
                 .detailAddress(userMemberSignupDTO.getDetailAddress())
                 .profileThumbnail(userMemberSignupDTO.getProfileThumbnail())
-                .campus(Campus.builder().campusNo(userMemberSignupDTO.getCampusNo()).build())
+                .campus(
+                        userMemberSignupDTO.getCampusNo() != null ?
+                            Campus.builder().campusNo(userMemberSignupDTO.getCampusNo()).build() :
+                            null)
                 .userAuth(
                         userMemberSignupDTO.getCampusNo() != null ?
                             UserAuth.builder().userAuthNo(1).build() :
