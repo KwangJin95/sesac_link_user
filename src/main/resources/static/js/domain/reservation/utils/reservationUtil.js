@@ -32,13 +32,25 @@ export function addOneHour(timeStr) {
 }
 
 // 예약 목록 - 타임 슬롯 생성
-export function generateTimeButtons(startTime, endTime, containerSelector, reservedStartTimes = []) {
+export function generateTimeButtons(startTime, endTime, containerSelector, reservedStartTimes = [], resDate) {
     const container = document.querySelector(containerSelector);
     container.innerHTML = ""; // 기존 버튼 초기화
+
+    alert(resDate);
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0]; // yyyy-mm-dd
 
     let currentTime = startTime;
     while (currentTime < endTime) {
         const nextTime = addOneHour(currentTime);
+
+        const isReserved = reservedStartTimes.includes(currentTime);
+
+        // 날짜가 오늘이고, 시간대가 이미 지난 경우
+        const isPastTime =
+            resDate === todayStr &&
+            isTimeBeforeNow(currentTime);
 
         const button = document.createElement("button");
         button.type = "button";
@@ -51,7 +63,7 @@ export function generateTimeButtons(startTime, endTime, containerSelector, reser
         button.dataset.startTime = currentTime;
         button.dataset.endTime = nextTime;
 
-        if (reservedStartTimes.includes(currentTime)) {
+        if (isReserved || isPastTime) {
             button.disabled = true;
         }
 
@@ -60,6 +72,14 @@ export function generateTimeButtons(startTime, endTime, containerSelector, reser
     }
 }
 
+// 지난 시간 체크
+function isTimeBeforeNow(timeStr) {
+    const [hour, minute] = timeStr.split(":").map(Number);
+    const now = new Date();
+    const targetTime = new Date();
+    targetTime.setHours(hour, minute, 0, 0);
+    return targetTime < now;
+}
 // 20250301 -> 2025-03-01 반환
 export function formatDate(dateStr) {
     const s = String(dateStr);
