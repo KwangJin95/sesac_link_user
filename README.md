@@ -35,12 +35,14 @@
 
 ## 🎥 서비스 미리보기
 
-### 👋 메인 페이지 & 로그인 모달
-![Image](https://github.com/user-attachments/assets/33108314-3529-4342-b89a-8901529a6e17)
+### 👋 메인 페이지 & 로그인
+![Image](https://github.com/user-attachments/assets/07602079-630b-40b5-b185-e745605f4b47)
 
 ### 👤 마이페이지
 
 - **계정 관리**
+![Image](https://github.com/user-attachments/assets/02015758-2fbe-427e-bb8f-d0a1bfd4a1aa)
+
 - **예약 내역 조회**
 
 
