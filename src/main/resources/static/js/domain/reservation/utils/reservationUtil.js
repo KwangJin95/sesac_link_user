@@ -139,7 +139,7 @@ export function drawCalendar(resDate, getter) {
         const dow = date.getDay(); // 0: 일 ~ 6: 토
         const holiday = isHoliday(year, month, day, getter());
         const isWeekend = dow === 0 || dow === 6;
-        const isPast = date <= today;
+        const isPast = date < today;
         const isDisabled = isPast || isWeekend || holiday;
 
         table += `<td class="p-2 border h-[60px] cursor-${isDisabled ? 'not-allowed text-gray-400 bg-gray-100' : 'pointer hover:bg-blue-100 reservationDate'}"
