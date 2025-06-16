@@ -103,7 +103,7 @@ export async function onAdviceReservationCalendarContainerClick(event) {
 
         let unavailableStartTimeList = await getUnavailableAdviceReservationStartTimeList(userNo, jobAdminNo, resDate);
 
-        generateTimeButtons("09:00", "18:00", "#timeSlotContainer", unavailableStartTimeList);
+        generateTimeButtons("09:00", "18:00", "#timeSlotContainer", unavailableStartTimeList, resDate);
 
         // 정보 표시 및 값 설정
         // 날짜
