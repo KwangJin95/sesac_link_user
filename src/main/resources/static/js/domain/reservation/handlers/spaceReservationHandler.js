@@ -138,7 +138,7 @@ export async function onSpaceReservationCalendarContainerClick(event) {
 
         let unavailableStartTimeList = await getUnavailableSpaceReservationStartTimeList(userNo, spaceNo, resDate);
 
-        generateTimeButtons(spaceAvailableStartTime, spaceAvailableEndTime, "#timeSlotContainer", unavailableStartTimeList);
+        generateTimeButtons(spaceAvailableStartTime, spaceAvailableEndTime, "#timeSlotContainer", unavailableStartTimeList, resDate);
 
         // 정보 표시 및 값 설정
         // 날짜
