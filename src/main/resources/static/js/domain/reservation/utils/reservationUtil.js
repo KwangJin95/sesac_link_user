@@ -36,8 +36,6 @@ export function generateTimeButtons(startTime, endTime, containerSelector, reser
     const container = document.querySelector(containerSelector);
     container.innerHTML = ""; // 기존 버튼 초기화
 
-    alert(resDate);
-
     const now = new Date();
     const todayStr = now.toISOString().split("T")[0]; // yyyy-mm-dd
 
