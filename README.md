@@ -25,7 +25,7 @@
 ### 🧪 테스트 계정
 - **예비 학생** : pre_user1 ~ pre_user30 / link1! 
 - **학생** : ddm_user1 ~ ddm_user30 / link1!
-- **SeSAC 회원 정보 가져오기** : sesac_user22, sesac_user52, sesac_user74, sesac_user96@sesaclink.kr
+- **SeSAC 회원 정보 가져오기** : sesac_user22, sesac_user52, sesac_user74, sesac_user96 + @sesaclink.kr
 
 ### ⚠️ 참고사항
 - 계정 이메일은 아이디@sesaclink.kr 입니다.
