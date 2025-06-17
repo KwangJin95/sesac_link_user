@@ -3,7 +3,6 @@ package kr.sesaclink.domain.reservation.entity;
 import jakarta.persistence.*;
 import kr.sesaclink.domain.campus.entity.Campus;
 import kr.sesaclink.domain.member.entity.AdminMember;
-import kr.sesaclink.domain.reservation.dto.SpaceRegisterDTO;
 import kr.sesaclink.global.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
