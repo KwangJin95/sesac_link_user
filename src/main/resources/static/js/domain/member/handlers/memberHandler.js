@@ -744,7 +744,7 @@ export function onPwForWithdrawCheckBtnClick(event) {
     event.preventDefault();
 
     // 탈퇴 비밀번호 input
-    const pwForWithdrawInput = document.querySelector("#pwForWithdrawInput");
+    const pwForWithdrawInput = document.querySelector("#pwForWithdraw");
     // 회원 번호
     const userNo = document.querySelector("#userNo");
 
