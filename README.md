@@ -45,7 +45,7 @@
 
 ![Image](https://github.com/user-attachments/assets/02015758-2fbe-427e-bb8f-d0a1bfd4a1aa)
 
-- **예약 내역 조회**
+- **예약 관리**
 
 
 
