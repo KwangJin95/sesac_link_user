@@ -63,7 +63,7 @@ public class AdviceReservationApiController {
     // 첨부파일 수정
     @PutMapping
     @PreAuthorize("hasRole('USER')")
-    public String modifySpaceReservation(Long adviceReservationNo,
+    public String modifyAdviceReservation(Long adviceReservationNo,
                                          MultipartFile adviceFile) {
 
         // 첨부파일 수정
