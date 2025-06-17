@@ -55,7 +55,8 @@
 ![Image](https://github.com/user-attachments/assets/8b452cfb-6767-4063-889f-8e7f479d4b9a)
   
 - **상담 예약**
-> 작성 예정입니다.
+
+![Image](https://github.com/user-attachments/assets/428237d4-3f4a-4fb6-aac2-03e3bbebacab)
 
 ---
 
