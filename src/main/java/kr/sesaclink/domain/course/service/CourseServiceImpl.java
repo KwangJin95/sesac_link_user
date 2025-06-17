@@ -17,13 +17,6 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
 
-    // 캠퍼스별 강좌 목록 조회
-    @Override
-    @Transactional
-    public List<CourseSearchDTO> getCourseListByCampus(Integer campusNo) {
-        return courseRepository.getCourseListByCampusNo(campusNo);
-    }
-
     // 회원 등록 강좌 목록 조회
     @Override
     @Transactional
@@ -31,15 +24,4 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.getCourseListByUserNo(userNo);
     }
 
-    // 새싹 회원 등록 강좌 목록 조회
-    @Override
-    @Transactional
-    public List<CourseDTO> getCourseListByEmail(String email) {
-        return courseRepository.getCourseListByEmail(email);
-    }
-    // 강좌 반환
-    @Override
-    public CourseDTO getCourseByCourseNo(Integer courseNo) {
-        return courseRepository.findByCourseNo(courseNo);
-    }
 }
