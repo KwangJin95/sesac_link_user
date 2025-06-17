@@ -1,7 +1,6 @@
 package kr.sesaclink.domain.course.repository;
 
 import kr.sesaclink.domain.course.dto.CourseDTO;
-import kr.sesaclink.domain.course.dto.CourseSearchDTO;
 import kr.sesaclink.domain.course.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
