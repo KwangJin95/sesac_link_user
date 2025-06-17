@@ -48,13 +48,13 @@ export function generateTimeButtons(startTime, endTime, containerSelector, reser
         // 날짜가 오늘이고, 시간대가 이미 지난 경우
         const isPastTime =
             resDate === todayStr &&
-            isTimeBeforeNow(currentTime);
+            isTimeBeforeNow(currentTime, resDate);
 
         const button = document.createElement("button");
         button.type = "button";
         button.className =
             "timeSlotBtn px-4 py-2 m-1 border rounded-lg transition " +
-            (reservedStartTimes.includes(currentTime)
+            ((isReserved || isPastTime)
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-white text-black hover:bg-blue-600");
         button.textContent = currentTime;
@@ -71,13 +71,13 @@ export function generateTimeButtons(startTime, endTime, containerSelector, reser
 }
 
 // 지난 시간 체크
-function isTimeBeforeNow(timeStr) {
+function isTimeBeforeNow(timeStr, resDate) {
     const [hour, minute] = timeStr.split(":").map(Number);
+    const targetTime = new Date(resDate + "T" + timeStr + ":00");
     const now = new Date();
-    const targetTime = new Date();
-    targetTime.setHours(hour, minute, 0, 0);
     return targetTime < now;
 }
+
 // 20250301 -> 2025-03-01 반환
 export function formatDate(dateStr) {
     const s = String(dateStr);
