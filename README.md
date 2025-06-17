@@ -217,7 +217,7 @@ logs/
 
 ## 📚 API 문서
 
-> 작성 예정입니다.
+- 👉 [Notion에서 보기](https://www.notion.so/215798a6acd780dcac1ef28a6c21be15?v=215798a6acd78177b990000c99e62dfa&source=copy_link)
 
 ---
 
