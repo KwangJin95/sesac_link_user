@@ -13,12 +13,6 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-    // 캠퍼스별 강좌 목록 조회
-    @Query("select new kr.sesaclink.domain.course.dto.CourseSearchDTO(c.courseNo, c.courseName) " +
-           "from Course c " +
-           "where c.campus.campusNo = :campusNo")
-    List<CourseSearchDTO> getCourseListByCampusNo(@Param("campusNo") Integer campusNo);
-
     // 회원 등록 강좌 목록 조회
     @Query("select new kr.sesaclink.domain.course.dto.CourseDTO(" +
             "c.courseNo, c.courseName, c.teacher, c.startDate, c.endDate) " +
@@ -32,11 +26,5 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
             "from Course c " +
             "where c.courseNo in (select s.course.courseNo from SesacUserCourse s where s.sesacUserMember.email = :email)")
     List<CourseDTO> getCourseListByEmail(@Param("email") String email);
-
-    // 강좌 반환
-    @Query("select new kr.sesaclink.domain.course.dto.CourseDTO(" +
-            "c.courseNo, c.courseName, c.teacher, c.startDate, c.endDate) " +
-            "from Course c " +
-            "where c.courseNo = :courseNo")
-    CourseDTO findByCourseNo(Integer courseNo);
+    
 }
