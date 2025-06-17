@@ -1,7 +1,6 @@
 package kr.sesaclink.domain.course.service;
 
 import kr.sesaclink.domain.course.dto.CourseDTO;
-import kr.sesaclink.domain.course.dto.CourseSearchDTO;
 import kr.sesaclink.domain.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
