@@ -81,13 +81,7 @@ public class AdviceReservation extends BaseEntity {
   public void changeReservationStatus(ReservationStatus reservationStatus) {
     this.reservationStatus = reservationStatus;
   }
-
-  // 예약 관리자 변경
-  public void changeStatusAdminMember(Long adminNo) {
-    this.statusAdminMember = AdminMember.builder()
-            .adminNo(adminNo)
-            .build();
-  }
+  
   // 첨부파일 변경
   public void changeAdviceFile(String fileName) {
     this.adviceFile = fileName;
