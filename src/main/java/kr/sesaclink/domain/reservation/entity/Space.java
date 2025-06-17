@@ -55,50 +55,5 @@ public class Space extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "space_status_no", nullable = false)
   private SpaceStatus spaceStatus;
-
-  public Space(SpaceRegisterDTO spaceRegisterDTO) {
-    this.spaceName = spaceRegisterDTO.getSpaceName();
-    this.spaceAvailableStartTime = spaceRegisterDTO.getSpaceAvailableStartTime();
-    this.spaceAvailableEndTime = spaceRegisterDTO.getSpaceAvailableEndTime();
-    this.beamProjector = spaceRegisterDTO.getBeamProjector();
-    this.peopleCount = spaceRegisterDTO.getPeopleCount();
-    this.whiteBoard = spaceRegisterDTO.getWhiteBoard();
-    this.spaceImage = spaceRegisterDTO.getSpaceImage();
-    this.campus = Campus.builder().campusNo(spaceRegisterDTO.getCampusNo()).build();
-    this.adminMember = AdminMember.builder().adminNo(spaceRegisterDTO.getAdminNo()).build();
-  }
-  
-  // 공간 이름 변경
-  public void changeSpaceName(String spaceName) {
-    this.spaceName = spaceName;
-  }
-  // 시작 시간 변경
-  public void changeSpaceAvailableStartTime(LocalTime spaceAvailableStartTime) {
-    this.spaceAvailableStartTime = spaceAvailableStartTime;
-  }
-  // 종료 시간 변경
-  public void changeSpaceAvailableEndTime(LocalTime spaceAvailableEndTime) {
-    this.spaceAvailableEndTime = spaceAvailableEndTime;
-  }
-  // 빔프로젝터 변경
-  public void changeBeamProjector(Boolean beamProjector) {
-    this.beamProjector = beamProjector;
-  }
-  // 인원수 변경
-  public void changePeopleCount(Integer peopleCount) {
-    this.peopleCount = peopleCount;
-  }
-  // 화이트보드 변경
-  public void changeWhiteBoard(Boolean whiteBoard) {
-    this.whiteBoard = whiteBoard;
-  }
-  // 공간 이미지 변경
-  public void changeSpaceImage(String spaceImage) {
-    this.spaceImage = spaceImage;
-  }
-  // 공간 상태 변경
-  public void changeSpaceStatus(SpaceStatus spaceStatus) {
-    this.spaceStatus = spaceStatus;
-  }
-  
+ 
 }
