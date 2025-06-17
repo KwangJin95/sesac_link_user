@@ -49,6 +49,7 @@
 
 - **예약 관리**
 
+![Image](https://github.com/user-attachments/assets/49e569bb-eed0-49fa-9ed0-108b427ede38)
 
 
 ### 📅 예약
